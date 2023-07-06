@@ -2,7 +2,7 @@
 
 import path from 'path';
 import { Client } from 'discord.js';
-import getFiles from './getFiles';
+import getFiles from '../utils/getFiles';
 export default function (client: Client) {
 	const folders = getFiles(path.join(__dirname, '..', 'events'), true);
 	for (const folder of folders) {
@@ -11,7 +11,8 @@ export default function (client: Client) {
 		console.log(event);
 		client.on(event as string, async (args) => {
 			for (const file of files) {
-				continue;
+				const eventFunction = require(file);
+				await eventFunction(client, args);
 			}
 		});
 	}
